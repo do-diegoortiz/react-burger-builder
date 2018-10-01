@@ -16,6 +16,8 @@ const controls = props => (
         key={thecon.label} 
         label={thecon.label} 
         added={() => props.ingredientAdded(thecon.type)}
+        removed={() => props.ingredientRemoved(thecon.type)}
+        disabled={props.disabled[thecon.type]}
         />
     ))}
 
