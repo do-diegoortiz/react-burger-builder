@@ -4,7 +4,6 @@ import Burger from '../../components/Burger/Burger'
 import Controls from '../../components/Burger/Controls/Controls'
 import Modal from '../../components/UI/Modal/Modal'
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary'
-import { timingSafeEqual } from 'crypto';
 
 const PRICING = {
   salad: 0.3,
