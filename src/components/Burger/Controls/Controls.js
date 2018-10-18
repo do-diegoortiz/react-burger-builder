@@ -22,7 +22,8 @@ const controls = props => (
     ))}
     <button
       className={classes.OrderButton}
-      disabled={!props.purchasibility}>
+      disabled={!props.purchasibility}
+      onClick={props.ordered}>
       ORDER NOW
     </button>
   </div>
