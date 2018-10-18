@@ -4,6 +4,7 @@ import Burger from '../../components/Burger/Burger'
 import Controls from '../../components/Burger/Controls/Controls'
 import Modal from '../../components/UI/Modal/Modal'
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary'
+import { timingSafeEqual } from 'crypto';
 
 const PRICING = {
   salad: 0.3,
@@ -99,7 +100,8 @@ class BurgerBuilder extends Component {
           <OrderSummary 
             ingredients={this.state.ingredients}
             cancelOrder={this.purchaseCancelHandler}
-            continueOrder={this.purchaseContinueHandler}/>
+            continueOrder={this.purchaseContinueHandler}
+            price={this.state.totalPrice}/>
         </Modal>
         <Burger ingredients={this.state.ingredients} />
         <Controls
