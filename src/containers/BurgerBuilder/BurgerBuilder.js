@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
+
 import Aux from '../../hoc/Auxiliary/Auxiliary'
 import Burger from '../../components/Burger/Burger'
 import Controls from '../../components/Burger/Controls/Controls'
 import Modal from '../../components/UI/Modal/Modal'
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary'
+import Spinner from '../../components/UI/Spinner/Spinner'
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import axios from '../../axios-order';
 
 const PRICING = {
   salad: 0.3,
@@ -22,8 +26,20 @@ class BurgerBuilder extends Component {
     },
     totalPrice: 4,
     purchasable: false,
-    purchasing: false
+    purchasing: false,
+    loading: false,
+    error: false
   }
+
+  /* componentDidMount () {
+    axios.get( 'https://nuevo-89fd3.firebaseio.com/orders.json' )
+      .then( response => {
+        this.setState( { ingredients: response.data } );
+      } )
+      .catch( error => {
+        this.setState( { error: true } );
+      } );
+  } */
 
   updatePurchasable(ingredients) {
     const sum = Object.keys(ingredients)
@@ -80,7 +96,41 @@ class BurgerBuilder extends Component {
   }
 
   purchaseContinueHandler = () => {
-    alert("You continue!")
+    this.setState({ loading: true})
+    const queryParams = []
+    for (let i in this.state.ingredients){
+      queryParams.push(encodeURIComponent(i) + "=" + encodeURIComponent(this.state.ingredients[i]))
+    }
+    queryParams.push('price=' + this.state.totalPrice)
+    const queryString = queryParams.join('&')
+
+    this.props.history.push({
+      pathname:'/checkout',
+      search: '?' + queryString
+    })
+
+    const order = {
+      ingredients: this.state.ingredients,
+      price: this.state.price,
+      customer: {
+        name: 'Natalia Ortiz',
+        address: {
+          street: "1234",
+          zipCode: "1111",
+          country: "Col"
+        },
+        email: "juan@asdfas.com"
+      },
+      deliveryMethod: 'lowest'
+    }
+
+    axios.post('/orders.json', order)
+      .then( response => {
+        console.log(response)
+      })
+      .catch( error => {
+        this.setState({ loading: false})
+      })
   }
 
   render() {
@@ -90,17 +140,24 @@ class BurgerBuilder extends Component {
     for (let key in disabledIngredients) {
       disabledIngredients[key] = (disabledIngredients[key] <= 0)
     }
+    let orderSummary = (
+      <OrderSummary 
+        ingredients={this.state.ingredients}
+        cancelOrder={this.purchaseCancelHandler}
+        continueOrder={this.purchaseContinueHandler}
+        price={this.state.totalPrice}/>
+    )
+
+    if (this.state.loading) {
+      orderSummary = <Spinner />
+    }
 
     return (
       <Aux>
         <Modal 
           show={this.state.purchasing}
           modalClosed={this.purchaseCancelHandler}>
-          <OrderSummary 
-            ingredients={this.state.ingredients}
-            cancelOrder={this.purchaseCancelHandler}
-            continueOrder={this.purchaseContinueHandler}
-            price={this.state.totalPrice}/>
+          {orderSummary}      
         </Modal>
         <Burger ingredients={this.state.ingredients} />
         <Controls
@@ -116,4 +173,4 @@ class BurgerBuilder extends Component {
   }
 }
 
-export default BurgerBuilder
+export default withErrorHandler(BurgerBuilder, axios)
