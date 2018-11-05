@@ -108,29 +108,6 @@ class BurgerBuilder extends Component {
       pathname:'/checkout',
       search: '?' + queryString
     })
-
-    const order = {
-      ingredients: this.state.ingredients,
-      price: this.state.price,
-      customer: {
-        name: 'Natalia Ortiz',
-        address: {
-          street: "1234",
-          zipCode: "1111",
-          country: "Col"
-        },
-        email: "juan@asdfas.com"
-      },
-      deliveryMethod: 'lowest'
-    }
-
-    axios.post('/orders.json', order)
-      .then( response => {
-        console.log(response)
-      })
-      .catch( error => {
-        this.setState({ loading: false})
-      })
   }
 
   render() {
@@ -140,13 +117,11 @@ class BurgerBuilder extends Component {
     for (let key in disabledIngredients) {
       disabledIngredients[key] = (disabledIngredients[key] <= 0)
     }
-    let orderSummary = (
-      <OrderSummary 
+    let orderSummary = <OrderSummary 
         ingredients={this.state.ingredients}
         cancelOrder={this.purchaseCancelHandler}
         continueOrder={this.purchaseContinueHandler}
         price={this.state.totalPrice}/>
-    )
 
     if (this.state.loading) {
       orderSummary = <Spinner />
@@ -173,4 +148,4 @@ class BurgerBuilder extends Component {
   }
 }
 
-export default withErrorHandler(BurgerBuilder, axios)
+export default BurgerBuilder
