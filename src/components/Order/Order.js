@@ -25,11 +25,8 @@ const order = props => {
     >{ig.name} ({ig.amount})</span>
   })
 
-  return(
+  return (
     <div className={classes.Order}>
-      {props.ingredients.map = () => {
-
-      }}
       <p>Ingrediends: {ingredientOutput}</p>
       <p>Price: <strong>USD {Number.parseFloat(props.price).toFixed(2)}</strong></p>
     </div>
