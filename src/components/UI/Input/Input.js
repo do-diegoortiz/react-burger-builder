@@ -9,9 +9,8 @@ const input = ( props ) => {
         case ( 'input' ):
             inputElement = <input
                 className={classes.InputElement}
-                {...props.elementConfig}
-                value={props.value}
-                onChange={props.changed} />;
+                {...props}
+                />;
             break;
         case ( 'textarea' ):
             inputElement = <textarea
